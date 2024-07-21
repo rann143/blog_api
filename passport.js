@@ -7,12 +7,13 @@ const path = require("path");
 const User = require("./models/user");
 require("dotenv").config();
 
-const pathToKey = path.join(__dirname, "id_rsa_pub.pem");
-const PUB_KEY = fs.readFileSync(pathToKey, "utf8");
+// const pathToKey = path.join(__dirname, "id_rsa_pub.pem");
+// const PUB_KEY = fs.readFileSync(pathToKey, "utf8");
+const pubKey = process.env.PUB_KEY;
 
 const jwtOptions = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-  secretOrKey: PUB_KEY,
+  secretOrKey: pubKey,
   algorithms: ["RS256"],
 };
 

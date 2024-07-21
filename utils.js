@@ -3,8 +3,11 @@ const jwt = require("jsonwebtoken");
 const fs = require("fs");
 const path = require("path");
 
-const pathToPrivKey = path.join(__dirname, "id_rsa_priv.pem");
-const PRIV_KEY = fs.readFileSync(pathToPrivKey, "utf8");
+require("dotenv").config();
+
+// const pathToPrivKey = path.join(__dirname, "id_rsa_priv.pem");
+// const PRIV_KEY = fs.readFileSync(pathToPrivKey, "utf8");
+const privKey = process.env.PRIV_KEY;
 
 function issueJWT(user) {
   const _id = user._id;
@@ -15,7 +18,7 @@ function issueJWT(user) {
     iat: Date.now(),
   };
 
-  const signedToken = jwt.sign(payload, PRIV_KEY, {
+  const signedToken = jwt.sign(payload, privKey, {
     expiresIn: expiresIn,
     algorithm: "RS256",
   });
