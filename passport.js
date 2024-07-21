@@ -1,40 +1,35 @@
-const passport = require("passport");
-const LocalStrategy = require("passport-local").Strategy;
-const User = require("./models/user");
-const bcrypt = require("bcryptjs");
+/* eslint-disable no-undef */
+const JwtStrategy = require("passport-jwt").Strategy;
+const { ExtractJwt } = require("passport-jwt");
+const fs = require("fs");
+const path = require("path");
 
-const verifyCallback = async (username, password, done) => {
+const User = require("./models/user");
+require("dotenv").config();
+
+const pathToKey = path.join(__dirname, "id_rsa_pub.pem");
+const PUB_KEY = fs.readFileSync(pathToKey, "utf8");
+
+const jwtOptions = {
+  jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+  secretOrKey: PUB_KEY,
+  algorithms: ["RS256"],
+};
+
+const jwtStrat = new JwtStrategy(jwtOptions, async (payload, done) => {
   try {
-    const user = await User.findOne({ username: username });
-    if (!user) {
+    const user = await User.findOne({ _id: payload.sub }).exec();
+
+    if (user) {
+      return done(null, user);
+    } else {
       return done(null, false);
     }
-
-    const match = await bcrypt.compare(password, user.password);
-
-    if (!match) {
-      return done(null, false, { message: "Incorrect Password" });
-    }
-
-    return done(null, user);
   } catch (err) {
     return done(err);
   }
+});
+
+module.exports = (passport) => {
+  passport.use(jwtStrat);
 };
-
-const strategy = new LocalStrategy(verifyCallback);
-
-passport.use(strategy);
-
-passport.serializeUser((user, done) => {
-  done(null, user.id);
-});
-
-passport.deserializeUser(async (userId, done) => {
-  try {
-    const user = await User.findById(userId);
-    done(null, user);
-  } catch (err) {
-    done(err);
-  }
-});

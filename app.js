@@ -1,14 +1,27 @@
 const createError = require("http-errors");
 const express = require("express");
+const cors = require("cors");
 const path = require("path");
 const passport = require("passport");
 require("dotenv").config();
+const compression = require("compression");
+const helmet = require("helmet");
+const RateLimit = require("express-rate-limit");
 const indexRouter = require("./routes/index");
 const blogRouter = require("./routes/blog");
 
-require("./passport");
+require("./passport")(passport);
 
 const app = express();
+
+app.use(helmet());
+
+const limiter = RateLimit({
+  windowMs: 1 * 60 * 1000,
+  max: 20,
+});
+
+app.use(limiter);
 
 const mongoose = require("mongoose");
 mongoose.set("strictQuery", false);
@@ -20,11 +33,15 @@ async function main() {
   await mongoose.connect(process.env.MONGO_DB);
 }
 
+app.use(compression());
+
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true }));
+
+app.use(cors());
 
 app.use("/", indexRouter);
 app.use("/blog", blogRouter);

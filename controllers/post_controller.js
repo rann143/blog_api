@@ -25,7 +25,7 @@ exports.write_blogpost_post = [
         title: req.body.title,
         text: req.body.text,
         timestamp: new Date(),
-        author: "66984ddf79fda4e203817e30",
+        author: req.user._id,
         published: req.body.published,
         comments: [],
       });

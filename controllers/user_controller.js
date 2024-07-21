@@ -2,6 +2,35 @@ const asyncHandler = require("express-async-handler");
 const { body, validationResult } = require("express-validator");
 const User = require("../models/user");
 const bcrypt = require("bcryptjs");
+const utils = require("../utils");
+
+exports.user_login = async (req, res, next) => {
+  try {
+    const user = await User.findOne({ username: req.body.username });
+    if (!user) {
+      res.status(401).json({ success: false, msg: "Could not find user" });
+    }
+
+    const match = await bcrypt.compare(req.body.password, user.password);
+
+    if (match) {
+      const tokenObject = utils.issueJWT(user);
+
+      res.status(200).json({
+        success: true,
+        user: user,
+        token: tokenObject.token,
+        expiresIn: tokenObject.expires,
+      });
+    } else {
+      res
+        .status(401)
+        .json({ success: false, msg: "You entered the wrong password" });
+    }
+  } catch (err) {
+    next(err);
+  }
+};
 
 exports.user_create_post = [
   body("first_name", "first name must not be empty")
@@ -58,7 +87,13 @@ exports.user_create_post = [
           });
 
           await user.save();
-          res.send("/blog");
+          const jwt = utils.issueJWT(user);
+          res.json({
+            success: true,
+            user: user,
+            token: jwt.token,
+            expiresIn: jwt.expires,
+          });
         });
       }
     } catch (err) {
@@ -68,7 +103,12 @@ exports.user_create_post = [
 ];
 
 exports.user_list_get = asyncHandler(async (req, res, next) => {
-  const allUsers = await User.find().sort({ last_name: 1 }).exec();
+  const allUsers = await User.find(
+    {},
+    "first_name last_name username email isAdmin",
+  )
+    .sort({ last_name: 1 })
+    .exec();
 
   res.send(allUsers);
 });

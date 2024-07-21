@@ -9,20 +9,29 @@
     "devstart": "nodemon ./bin/www",
     "serverstart": "DEBUG=blog-api:* npm run devstart"
   },
+  "engines": {
+    "node": ">=v20.12.2"
+  },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "bcryptjs": "^2.4.3",
+    "compression": "^1.7.4",
+    "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "ejs": "^3.1.10",
     "express": "^4.19.2",
     "express-async-handler": "^1.2.0",
+    "express-rate-limit": "^7.3.1",
     "express-validator": "^7.1.0",
+    "helmet": "^7.1.0",
     "http-errors": "^2.0.0",
+    "jsonwebtoken": "^9.0.2",
     "luxon": "^3.4.4",
     "mongoose": "^8.5.1",
     "nodemon": "^3.1.4",
     "passport": "^0.7.0",
+    "passport-jwt": "^4.0.1",
     "passport-local": "^1.0.0",
     "path": "^0.12.7"
   },

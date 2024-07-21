@@ -19,12 +19,12 @@ exports.comment_create_post = [
       const comment = new Comment({
         text: req.body.text,
         timestamp: new Date(),
-        author: "66984c439a3abaac5ef1ebbc",
-        post: req.params.id,
+        author: req.user._id,
+        post: req.params.postId,
       });
 
       await comment.save();
-      await Post.findByIdAndUpdate(req.params.id, {
+      await Post.findByIdAndUpdate(req.params.postId, {
         $push: { comments: comment._id },
       });
       res.send(comment);
