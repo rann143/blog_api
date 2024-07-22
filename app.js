@@ -14,6 +14,8 @@ require("./passport")(passport);
 
 const app = express();
 
+app.use(cors());
+
 app.use(helmet());
 
 const limiter = RateLimit({
@@ -40,8 +42,6 @@ app.set("view engine", "ejs");
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-app.use(cors());
 
 app.use("/", indexRouter);
 app.use("/blog", blogRouter);
