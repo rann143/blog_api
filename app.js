@@ -21,7 +21,9 @@ app.use(cors());
 // Handle OPTIONS requests for CORS preflight
 app.options("*", cors());
 
-app.use(helmet());
+app.use(helmet({ crossOriginResourcePolicy: false }));
+
+app.use(compression());
 
 const limiter = RateLimit({
   windowMs: 1 * 60 * 1000,
@@ -40,8 +42,6 @@ async function main() {
   await mongoose.connect(process.env.MONGO_URI);
 }
 
-app.use(compression());
-
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 
@@ -50,10 +50,6 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use("/", indexRouter);
 app.use("/blog", blogRouter);
-app.get("/ip", (request, response, next) => {
-  response.send(request.ip);
-  next();
-});
 
 console.log(process.env.PORT);
 
