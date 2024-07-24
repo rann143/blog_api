@@ -21,7 +21,7 @@ app.use(cors());
 // Handle OPTIONS requests for CORS preflight
 app.options("*", cors());
 
-app.use(helmet({ crossOriginResourcePolicy: false }));
+// app.use(helmet({ crossOriginResourcePolicy: false }));
 
 app.use(compression());
 
