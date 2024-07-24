@@ -83,7 +83,7 @@ exports.user_create_post = [
             email: req.body.email,
             username: req.body.username,
             password: hashedPassword,
-            isAdmin: true,
+            isAdmin: false,
           });
 
           await user.save();
