@@ -14,6 +14,8 @@ require("./passport")(passport);
 
 const app = express();
 
+app.set("trust proxy", 1 /* number of proxies between user and server */);
+
 app.use(cors());
 
 // Handle OPTIONS requests for CORS preflight
@@ -48,6 +50,10 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use("/", indexRouter);
 app.use("/blog", blogRouter);
+app.get("/ip", (request, response, next) => {
+  response.send(request.ip);
+  next();
+});
 
 console.log(process.env.PORT);
 
