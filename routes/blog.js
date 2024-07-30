@@ -58,11 +58,7 @@ router.get(
 // ROUTES FOR POSTS
 
 // GET route for post list
-router.get(
-  "/posts",
-  passport.authenticate("jwt", { session: false }),
-  post_controller.post_list_get,
-);
+router.get("/posts", post_controller.post_list_get);
 
 // GET route for single post
 router.get(
