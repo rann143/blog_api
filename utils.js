@@ -11,7 +11,7 @@ const privKey = process.env.PRIV_KEY;
 
 function issueJWT(user) {
   const _id = user._id;
-  const expiresIn = "1d";
+  const expiresIn = "2d";
 
   const payload = {
     sub: _id,
