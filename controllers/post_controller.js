@@ -37,7 +37,7 @@ exports.write_blogpost_post = [
 ];
 
 exports.post_list_get = asyncHandler(async (req, res, next) => {
-  const allPosts = await Post.find()
+  const allPosts = await Post.find({ published: true })
     .sort({ timestamp: 1 })
     .populate("author", "first_name last_name")
     .populate("comments")
