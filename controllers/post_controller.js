@@ -47,10 +47,17 @@ exports.post_list_get = asyncHandler(async (req, res, next) => {
 });
 
 exports.post_detail_get = asyncHandler(async (req, res, next) => {
-  const post = await Post.findById(req.params.postId)
-    .populate("author", "first_name last_name")
-    .populate("comments")
-    .exec();
+  const [post, allComments] = await Promise.all([
+    Post.findById(req.params.postId)
+      .populate("author", "first_name last_name")
+      .exec(),
+    Comment.find({ post: req.params.postId })
+      .sort({ timestamp: 1 })
+      .populate("author", "username")
+      .exec(),
+  ]);
+
+  post.comments = allComments;
 
   res.send(post);
 });
