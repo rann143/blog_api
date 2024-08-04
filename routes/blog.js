@@ -33,7 +33,7 @@ router.get(
 
 router.post("/login", user_controller.user_login);
 
-router.post("/creator-login", auth.isAdmin, user_controller.user_login);
+router.post("/creator-login", auth.isAdmin, user_controller.creator_login);
 
 //POST route for creating new user
 router.post("/sign-up", user_controller.user_create_post);
