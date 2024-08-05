@@ -78,6 +78,14 @@ router.post(
   post_controller.write_blogpost_post,
 );
 
+router.delete("/posts/:postId/delete", post_controller.blog_post_delete);
+
+router.post(
+  "/posts/:postId/update",
+  passport.authenticate("jwt", { session: false }),
+  post_controller.blog_post_update,
+);
+
 // GET route for post comments
 router.get(
   "/posts/:postId/comments",
@@ -89,6 +97,14 @@ router.post(
   "/posts/:postId/write-comment",
   passport.authenticate("jwt", { session: false }),
   comment_controller.comment_create_post,
+);
+
+// DELETE route for comments
+router.delete(
+  "/posts/:postId/:commentId/delete-comment",
+  passport.authenticate("jwt", { session: false }),
+  auth.isAdmin,
+  comment_controller.comment_delete,
 );
 
 module.exports = router;

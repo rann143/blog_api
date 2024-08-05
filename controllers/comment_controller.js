@@ -26,7 +26,7 @@ exports.comment_create_post = [
       await comment.save();
       await Post.findByIdAndUpdate(req.params.postId, {
         $push: { comments: comment._id },
-      });
+      }).exec();
       res.send(comment);
     }
   }),
@@ -39,4 +39,15 @@ exports.comment_list_for_post_get = asyncHandler(async (req, res, next) => {
     .exec();
 
   res.send(allComments);
+});
+
+exports.comment_delete = asyncHandler(async (req, res, next) => {
+  await Post.findByIdAndUpdate(req.params.postId, {
+    $pull: { comments: { $in: [req.params.commentId] } },
+  }).exec();
+
+  await Comment.findByIdAndDelete(req.params.commentId).exec();
+
+  const updatedPost = await Post.findById(req.params.postId).exec();
+  res.send(updatedPost);
 });
