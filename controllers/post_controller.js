@@ -36,8 +36,18 @@ exports.write_blogpost_post = [
   }),
 ];
 
-exports.post_list_get = asyncHandler(async (req, res, next) => {
-  const allPosts = await Post.find({ published: true })
+exports.post_list_get_published = asyncHandler(async (req, res, next) => {
+  const publishedPosts = await Post.find({ published: true })
+    .sort({ timestamp: 1 })
+    .populate("author", "first_name last_name")
+    .populate("comments")
+    .exec();
+
+  res.send(publishedPosts);
+});
+
+exports.post_list_get_all = asyncHandler(async (req, res, next) => {
+  const allPosts = await Post.find({})
     .sort({ timestamp: 1 })
     .populate("author", "first_name last_name")
     .populate("comments")
