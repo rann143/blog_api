@@ -14,16 +14,9 @@ require("./passport")(passport);
 
 const app = express();
 
-app.set("trust proxy", 1 /* number of proxies between user and server */);
-
 app.use(helmet());
 
 app.use(cors());
-
-// Handle OPTIONS requests for CORS preflight
-// app.options("*", cors());
-
-// app.use(helmet({ crossOriginResourcePolicy: false }));
 
 app.use(compression());
 
