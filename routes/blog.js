@@ -68,11 +68,7 @@ router.get(
 );
 
 // GET route for single post
-router.get(
-  "/posts/:postId",
-  passport.authenticate("jwt", { session: false }),
-  post_controller.post_detail_get,
-);
+router.get("/posts/:postId", post_controller.post_detail_get);
 
 // // FOR ADMIN ONLY (SET UP AUTHORIZATION); GET route for creating a blog post
 // router.post("/write-blog-post", post_controller.create_blogpost_get);
