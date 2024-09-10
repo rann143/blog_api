@@ -5,15 +5,11 @@ const User = require("../models/user");
 const Comment = require("../models/comment");
 
 exports.write_blogpost_post = [
-  body("title", "Must enter a title")
-    .trim()
-    .isLength({ min: 1 })
-    .blacklist("<>/"),
+  body("title", "Must enter a title").trim().isLength({ min: 1 }),
 
   body("text", "Must write text for your blog post")
     .trim()
-    .isLength({ min: 1 })
-    .blacklist("<>/"),
+    .isLength({ min: 1 }),
 
   asyncHandler(async (req, res, next) => {
     const errors = validationResult(req);
@@ -81,15 +77,11 @@ exports.blog_post_update = [
     next();
   },
 
-  body("title", "Must enter a title")
-    .trim()
-    .isLength({ min: 1 })
-    .blacklist("<>/"),
+  body("title", "Must enter a title").trim().isLength({ min: 1 }),
 
   body("text", "Must write text for your blog post")
     .trim()
-    .isLength({ min: 1 })
-    .blacklist("<>/"),
+    .isLength({ min: 1 }),
 
   asyncHandler(async (req, res, next) => {
     const errors = validationResult(req);
